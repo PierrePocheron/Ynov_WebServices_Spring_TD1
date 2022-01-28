@@ -1,5 +1,7 @@
 package com.ynov.j2eetdspring.entities;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +31,22 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Address> addresses = new ArrayList<Address>();
 
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(name = "users_sorties",
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_sortie"))
+    private List<Sortie> sorties;
+
     public User() {}
-    public User(Long id, String username, String firstname, String lastname, String phone, List<Address> addresses) {
+    public User(Long id, String username, String firstname, String lastname, String phone, List<Address> addresses, List<Sortie> sorties) {
         this.id = id;
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.phone = phone;
         this.addresses = addresses;
+        this.sorties = sorties;
     }
 
     public Long getId() {
@@ -85,6 +95,14 @@ public class User {
 
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
+    }
+
+    public List<Sortie> getParticipating() {
+        return sorties;
+    }
+
+    public void setParticipating(List<Sortie> participating) {
+        this.sorties = participating;
     }
 
     @Override

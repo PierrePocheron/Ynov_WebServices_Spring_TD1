@@ -1,5 +1,7 @@
 package com.ynov.j2eetdspring.entities;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.*;
@@ -18,7 +20,7 @@ public class Sortie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_address")
+    @Column(name = "id_sortie")
     private Long id;
 
     @Column(name = "name")
@@ -27,8 +29,8 @@ public class Sortie {
     @Column(name = "street")
     private String street;
 
-    @Column(name = "desc")
-    private String desc;
+    @Column(name = "description")
+    private String desccription;
 
     @Column(name = "date")
     private Date date;
@@ -42,29 +44,20 @@ public class Sortie {
     @Column(name = "place")
     private String place;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "framing", referencedColumnName = "id_user")
-    private User framing;
+    @ManyToMany
+    @JoinColumn(name = "sorties")
+    private List<User> participating;
 
-    @Column(name = "participating")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "participating")
-    private List<User> participating = new ArrayList<User>();
-
-    public Sortie(String name, String street, String desc, Date date, Timestamp duration, Complexity complexity, String place, User framing, List<User> participating) {
+    public Sortie(Long id, String name, String street, String desccription, Date date, Timestamp duration, Complexity complexity, String place, List<User> participating) {
+        this.id = id;
         this.name = name;
         this.street = street;
-        this.desc = desc;
+        this.desccription = desccription;
         this.date = date;
         this.duration = duration;
         this.complexity = complexity;
         this.place = place;
-        this.framing = framing;
         this.participating = participating;
-    }
-
-    public Sortie() {
-
     }
 
     public Long getId() {
@@ -91,12 +84,12 @@ public class Sortie {
         this.street = street;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDesccription() {
+        return desccription;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDesccription(String desccription) {
+        this.desccription = desccription;
     }
 
     public Date getDate() {
@@ -131,14 +124,6 @@ public class Sortie {
         this.place = place;
     }
 
-    public User getFraming() {
-        return framing;
-    }
-
-    public void setFraming(User framing) {
-        this.framing = framing;
-    }
-
     public List<User> getParticipating() {
         return participating;
     }
@@ -147,17 +132,18 @@ public class Sortie {
         this.participating = participating;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Sortie sortie = (Sortie) o;
-        return Objects.equals(id, sortie.id) && Objects.equals(name, sortie.name) && Objects.equals(street, sortie.street) && Objects.equals(desc, sortie.desc) && Objects.equals(date, sortie.date) && Objects.equals(duration, sortie.duration) && complexity == sortie.complexity && Objects.equals(place, sortie.place) && Objects.equals(framing, sortie.framing) && Objects.equals(participating, sortie.participating);
+    public Sortie() {
+        super();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, street, desc, date, duration, complexity, place, framing, participating);
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 
     @Override
